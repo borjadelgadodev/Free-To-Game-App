@@ -41,12 +41,27 @@ import com.borjadelgadodev.freetogame.ui.components.CustomSnackbar
 import com.borjadelgadodev.freetogame.ui.screens.home.Screen
 import org.koin.androidx.compose.koinViewModel
 
+@Composable
+fun DetailScreen(
+    vm: DetailViewModel = koinViewModel(),
+    onBackClick: () -> Unit
+) {
+    val state by vm.state.collectAsState()
+
+    DetailScreen(
+        state = state,
+        onBackClick = onBackClick,
+        onFavoriteClick = { vm.onFavoriteClick() }
+    )
+}
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailScreen(
-    viewModel: DetailViewModel = koinViewModel(),
-    onBackClick: () -> Unit) {
-    val state by viewModel.state.collectAsState()
+    state: Result<Game?>,
+    onBackClick: () -> Unit,
+    onFavoriteClick: () -> Unit
+) {
     val detailState = rememberDetailState()
 
     Screen {
@@ -61,7 +76,7 @@ fun DetailScreen(
             },
             floatingActionButton = {
                 val isFavorite = (state as? Result.Success)?.data?.isFavorite ?: false
-                FloatingActionButton(onClick = { viewModel.onFavoriteClick() }) {
+                FloatingActionButton(onClick = onFavoriteClick) {
                     Icon(
                         imageVector = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
                         contentDescription = null
@@ -69,8 +84,8 @@ fun DetailScreen(
                 }
             },
             snackbarHostState = {
-                CustomSnackbar(snackbarHostState = rememberDetailState().snackbarHostState) {
-                    viewModel.onFavoriteClick()
+                CustomSnackbar(snackbarHostState = detailState.snackbarHostState) {
+                    onFavoriteClick()
                 }
             },
             modifier = Modifier.nestedScroll(detailState.scrollBehavior.nestedScrollConnection)
@@ -94,7 +109,7 @@ private fun DetailTopBar(
         IconButton(onClick = { onBackClick() }) {
             Icon(
                 imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                contentDescription = "Volver"
+                contentDescription = "Back"
             )
         }
     }, scrollBehavior = scrollBehavior

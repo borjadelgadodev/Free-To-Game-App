@@ -53,7 +53,14 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.ui.test.junit4.android)
     testImplementation(project(":data"))
+    androidTestImplementation(project(":data"))
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":app"))
+    androidTestImplementation(project(":data"))
+    androidTestImplementation(project(":usecases"))
+    androidTestImplementation(project(":app"))
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
     implementation (libs.retrofit)
@@ -92,5 +99,11 @@ dependencies {
 
     // Turbine
     testImplementation(libs.turbine)
-}
 
+    configurations.all {
+        resolutionStrategy {
+            force("androidx.test.ext:junit:1.2.1")
+            force("androidx.test.espresso:espresso-core:3.6.1")
+        }
+    }
+}

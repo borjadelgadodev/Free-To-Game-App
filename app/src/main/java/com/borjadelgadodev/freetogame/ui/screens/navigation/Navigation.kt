@@ -29,8 +29,7 @@ fun Navigation() {
                 HomeScreen(
                     onClick = { game ->
                         navController.navigate(ScreenDestination.Detail.createDetailRoute(game.id))
-                    },
-                    viewModel = koinViewModel()
+                    }, viewModel = koinViewModel()
                 )
             }
             composable(ScreenDestination.MyGames.route) {
@@ -45,9 +44,8 @@ fun Navigation() {
             ) { backStackEntry ->
                 val gameId = requireNotNull(backStackEntry.arguments?.getInt(NavArgs.GameId.key))
                 DetailScreen(
-                    viewModel = koinViewModel { parametersOf(gameId) },
-                    onBackClick = { navController.popBackStack() }
-                )
+                    vm = koinViewModel { parametersOf(gameId) },
+                    onBackClick = { navController.popBackStack() })
             }
         }
     }

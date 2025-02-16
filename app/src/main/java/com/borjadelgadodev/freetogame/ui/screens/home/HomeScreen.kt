@@ -34,9 +34,20 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.borjadelgadodev.domain.Game
 import com.borjadelgadodev.freetogame.R
+import com.borjadelgadodev.freetogame.Result
 import com.borjadelgadodev.freetogame.ui.components.AcScaffold
 import com.borjadelgadodev.freetogame.ui.theme.FreeToGameTheme
 import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun HomeScreen(
+    onClick: (Game) -> Unit,
+    viewModel: HomeViewModel = koinViewModel()
+) {
+    viewModel.onUiReady()
+    val state by viewModel.state.collectAsState()
+    HomeScreen(state = state, onClick = onClick)
+}
 
 @Composable
 fun Screen(content: @Composable () -> Unit) {
@@ -52,13 +63,11 @@ fun Screen(content: @Composable () -> Unit) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    onClick: (Game) -> Unit,
-    viewModel: HomeViewModel = koinViewModel()
+    state: Result<List<Game>>,
+    onClick: (Game) -> Unit
 ) {
-    val state by viewModel.state.collectAsState()
-    val homeState = rememberHomeState()
 
-    viewModel.onUiReady()
+    val homeState = rememberHomeState()
 
     Screen {
         AcScaffold(
